@@ -1,0 +1,55 @@
+########################################################################
+#
+# Makefile for the libslink library in comserv
+#
+# The makefile in each directory should support the following targets:
+#       all
+#       clean
+#       install
+#
+
+MAKEFILE := $(lastword $(MAKEFILE_LIST))
+include	../$(MAKEFILE).include
+
+# Ensure desired LP (Long and Pointer) size for compilation has been set.
+ifndef NUMBITS
+$(error NUMBITS is not set)
+endif
+
+#########################################################################
+# Set to the location of software on your system
+CSDIR	= ..
+
+########################################################################
+# Linux definitions
+CPPFLAGS = $(INCL) $(OSDEFS) $(ENDIAN)
+CFLAGS	 = -m$(NUMBITS) $(DEBUG) $(COPT)
+LDFLAGS	 = -m$(NUMBITS) $(DEBUG)
+RANLIB	 = ranlib 
+
+########################################################################
+
+LIB_SRCS = gswap.c unpack.c msrecord.c genutils.c strutils.c \
+           logging.c network.c statefile.c config.c \
+           globmatch.c slplatform.c slutils.c
+
+LIB_OBJS = $(LIB_SRCS:.c=.o)
+
+LIB	= libslink.a
+
+ALL =		$(LIB)
+
+all:		$(ALL)
+
+$(LIB):		$(LIB_OBJS)
+		$(RM) -f $(LIB)
+		$(AR) -crs $(LIB) $(LIB_OBJS)
+		$(RANLIB) $@
+
+.c.o:
+		$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+clean:
+		-rm -f *.o *~ core core.* $(ALL)
+
+install:
