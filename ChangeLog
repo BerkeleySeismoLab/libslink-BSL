@@ -1,3 +1,6 @@
+2022.073: Doug Neuhauser, doug@seismo.berkeley.edu
+	- Fix 2 lines in slutils.c that needed SLHEADSIZE added to buffer offset.
+	
 2020.048:
 	- Support M SEED quality code.
 	- Fix segfault in sl_msr_print() when no record passed.
